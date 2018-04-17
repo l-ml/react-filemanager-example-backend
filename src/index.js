@@ -22,7 +22,9 @@ const upload = multer({ storage });
 
 // Returns files from upload directory in JSON format.
 app.get('/files', (req, res) => {
-  res.json(fs.readdirSync(UPLOAD_DIR).map(filename => fileAsJSON(filename, fs.statSync(`${UPLOAD_DIR}/${filename}`))));
+  res.json(fs.readdirSync(UPLOAD_DIR)
+    .filter(file => !(/(^|\/)\.[^\/\.]/g).test(file))
+    .map(filename => fileAsJSON(filename, fs.statSync(`${UPLOAD_DIR}/${filename}`))));
 })
 
 // Saves uploaded file to upload directory and returns saved file as JSON.
